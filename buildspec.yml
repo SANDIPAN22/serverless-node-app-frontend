@@ -20,6 +20,5 @@ phases:
 
   post_build:
     commands:
-      - echo invalidating caches of the cdn
-      - aws cloudfront create-invalidation --distribution-id EM9PGU089S5WL --paths "/*"
+      
       - echo all is done at `date`
