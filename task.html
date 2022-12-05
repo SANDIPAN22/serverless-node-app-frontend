@@ -45,7 +45,7 @@
         console.log(task)
         htmlcode += `
         <div class="card card-${i%5}">
-            <div >mode: ${env}</i></div>
+            <div ><b>api_version: </b>${env}: ${data.api_version}</i></div>
             <p class="card__exit" >
                 <button onclick='deleterFunc("${task.task_id}", "${api_id}", "${env}")'> ❌ </button>
                 </p>
