@@ -21,10 +21,5 @@ phases:
   post_build:
     commands:
       - echo invalidating caches of the cdn if production deployment happend
-      - |
-      if ["$ENV" = "prod"]; then
-
-        AWS_MAX_ATTEMPTS=10;
-        aws cloudfront create-invalidation --distribution-id E22BE96CQLD3I8 --paths "/*";
-      fi
+      - if ["$ENV" = "prod"]; then AWS_MAX_ATTEMPTS=10; aws cloudfront create-invalidation --distribution-id E22BE96CQLD3I8 --paths "/*"; fi
       - echo all is done at `date`
