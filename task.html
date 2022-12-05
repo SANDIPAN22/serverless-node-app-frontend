@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="heading">
+          <h1 class="heading__title">Task Cards</h1>
+          <p class="heading__credits"><a class="heading__link"  href="./taskadd.html">Add new task card here ➕</a></p>
+        </div>
+        <div class="cards" id="cardsClassID">
+        
+        </div>
+      </div>
+</body>
+<script>
+        function deleterFunc (t_id, api_id, env){
+    console.log("clicked on deleted button and the details are given below")
+    fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/deleteTask/${t_id}`, {
+  method: 'DELETE',
+})
+.then(()=>{
+    location.reload()
+})
+
+
+}
+</script>
+<script type="module">
+    import {api_id, env} from "./config.js"
+
+
+    let htmlcode = ``
+    fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/getall`)           //api for the get request
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+    var i = 0
+    data.message.Items.forEach((task)=>{
+        console.log(task)
+        htmlcode += `
+        <div class="card card-${i%5}">
+            <div >mode: ${env}</i></div>
+            <p class="card__exit" >
+                <button onclick='deleterFunc("${task.task_id}", "${api_id}", "${env}")'> ❌ </button>
+                </p>
+            <h2 class="card__title">${task.task_name}</h2>
+            <p class="card__apply">
+              <a class="card__link" target="_blank" href="https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/get/${task.task_id}">See more... <i class="fas fa-arrow-right"></i></a>
+            </p>
+          </div>
+        `
+        i++
+    })
+    const cardsClass = document.getElementById("cardsClassID")
+    cardsClass.innerHTML = htmlcode
+  });
+
+
+
+</script>
+</html>
