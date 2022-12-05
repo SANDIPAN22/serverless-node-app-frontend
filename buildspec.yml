@@ -8,7 +8,7 @@ phases:
 
   pre_build:
     commands:
-      - echo -e "export const api_id=$API_ID; \nexport const env=$ENV" > config.js
+      - echo  "export const api_id='$API_ID'; \nexport const env='$ENV'" > config.js
       - echo config file setup is done...
 
 
