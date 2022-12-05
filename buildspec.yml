@@ -14,7 +14,9 @@ phases:
 
   build:
     commands:
-      - aws s3 sync . s3://proj-alpha-dev/
+      - aws s3 sync . s3://proj-alpha-dev/ --delete --exclude ".git/*" --exclude "config.js"
+      - echo syncing done with the s3.....
 
   post_build:
     commands:
+      - echo all is done at `date`
