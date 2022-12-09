@@ -1,3 +1,4 @@
+import {api_id, env} from "../../config"
 function getCookie(cname) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
@@ -19,10 +20,17 @@ function auth(){
   let token = getCookie("id_token")
 
   if (token != ""){
+
     return token
   }
   else{
-    return false
+    if (env === "dev"){
+      return "dummy"
+    }
+    else{
+      return false
+    }
+    
   }
 
 }
