@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="./assets/js/auth.js"></script>
+    <script>
+         const token = auth()
+          if (!token){
+            alert("OOOPS I don't think, you are authorized for this step !")
+            window.location= "./"
+          }
+    </script>
 </head>
 <body>
     <div class="main-container">
@@ -19,24 +27,76 @@
       </div>
 </body>
 <script>
-        function deleterFunc (t_id, api_id, env){
-    console.log("clicked on deleted button and the details are given below")
-    fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/deleteTask/${t_id}`, {
-  method: 'DELETE',
-})
-.then(()=>{
-    location.reload()
-})
+              // deletion Script 
+
+    function deleterFunc (t_id, api_id, env){
+    let text = "Are sure about the deletion!\nEither OK or Cancel.";
+    if (confirm(text) == true) {
+      fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/deleteTask/${t_id}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization":token
+        }
+      })
+      .then(()=>{
+          location.reload()
+      })
+      .catch((err)=>{
+          alert("Some error occured. Please Re-login..")
+          location.reload()
+      })
+    }
+    
 
 
 }
+    function seeMore(api_id, env, t_id){
+      console.log(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/get/${t_id}`)
+      fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/get/${t_id}`, {
+        
+        headers: {
+          "Authorization":token
+        }
+      })
+      .then((d)=>{
+         return d.json()
+      })
+      .then((dj => {
+        console.log(dj)
+        const resultBox = document.getElementById(`card-id-${t_id}`)
+
+        const resultHTML = `
+        <p class="card__apply">
+
+         <p class="card__link">Description: ${JSON.stringify(dj.message.Item.task_description)}</p>
+         <p class="card__link">ETA: ${JSON.stringify(dj.message.Item.task_other_info.task_eta)}</p>
+         <p class="card__link">Priority: ${JSON.stringify(dj.message.Item.task_other_info.task_priority)}</p>
+        </p>
+        `
+        resultBox.innerHTML = resultHTML
+      }))
+      .catch((err)=>{
+          alert("Some error occured. Please Re-login..")
+          location.reload()
+      })
+    }
+    
+
 </script>
 <script type="module">
+
+            //  get-all script stays here
+
     import {api_id, env} from "./config.js"
 
 
     let htmlcode = ``
-    fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/getall`)           //api for the get request
+    fetch(`https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/getall`, {
+      headers: {
+			'Authorization': token,
+			
+		},
+    })           //api for the get request
   .then(response => response.json())
   .then(data => {
     console.log(data)
@@ -44,22 +104,30 @@
     data.message.Items.forEach((task)=>{
         console.log(task)
         htmlcode += `
-        <div class="card card-${i%5}">
+        <div class="card card-${i%5}" >
             <div ><b>api_version: </b>${env}: ${data.api_version}</i></div>
             <p class="card__exit" >
                 <button onclick='deleterFunc("${task.task_id}", "${api_id}", "${env}")'> ❌ </button>
                 </p>
             <h2 class="card__title">${task.task_name}</h2>
-            <p class="card__apply">
-              <a class="card__link" target="_blank" href="https://${api_id}.execute-api.us-east-1.amazonaws.com/${env}/get/${task.task_id}">See more... <i class="fas fa-arrow-right"></i></a>
+            
+            <div id="card-id-${task.task_id}"> 
+              <p class="card__apply">
+              <a class="card__link" onclick="seeMore('${api_id}', '${env}', '${task.task_id}')">See more... <i class="fas fa-arrow-right"></i></a>
             </p>
+              </div>
           </div>
         `
         i++
     })
     const cardsClass = document.getElementById("cardsClassID")
     cardsClass.innerHTML = htmlcode
-  });
+  })
+  .catch((err)=>{
+          alert("Some error occured. Please Re-login..")
+          location.reload()
+      })
+  
 
 
 

@@ -121,6 +121,14 @@
       }
       }
     </style>
+    <script src="./assets/js/auth.js"></script>
+    <script>
+         const token = auth()
+          if (!token){
+            alert("OOOPS I don't think, you are authorized for this step !")
+            window.location= "./"
+          }
+    </script>
   </head>
   <body>
     <div class="main-block">
@@ -136,9 +144,9 @@
           <h2>Add Task Details here</h2>
         </div>
         <div class="info">
-          <input class="fname" type="text" id="task_name" placeholder="Task Name">
+          <input class="fname" type="text" id="task_name" placeholder="Task Name" required>
           <input type="text" id="task_description" placeholder="Task Description">
-          <input type="text" id="task_author" placeholder="Task Author">
+          <input type="text" id="task_author" placeholder="Task Author" value="ghost" hidden required>
           <input type="date" id="task_eta" placeholder="ETA">
           <select id="task_priority">
             <option value="no" selected>Priority</option>
@@ -167,6 +175,7 @@
             task_description: document.getElementById("task_description").value,
             task_author: document.getElementById("task_author").value,
             task_eta: document.getElementById("task_eta").value,
+            task_priority: document.getElementById("task_priority").value
 
         }
         console.log("data check==> ", data)
@@ -174,7 +183,8 @@
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': token
         },
         body: JSON.stringify(data)
         }).then(res => res.json())
@@ -186,7 +196,10 @@
                 document.location.href=`./task.html`
             }, 5000)
 
-        });
+        })
+        .catch((err)=>{
+          alert("Do re-login...now...")
+        })
             })
   </script>
 </html>
