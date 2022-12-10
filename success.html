@@ -10,16 +10,26 @@
     <img src="https://thumbs.gfycat.com/FavorableBoldConey-size_restricted.gif" alt="success" >
     <a href="./">go to home page now</a>
 </body>
-<script>
+<script type="module">
+
+import {api_id, env} from "./config.js"
+
     function setCookie(cname, cvalue, exmins) {
   const d = new Date();
   d.setTime(d.getTime() + (exmins*60*1000));
   let expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-    var token = window.location.hash.split('&').filter(function(el) { if(el.match('id_token') !== null) return true; })[0].split('=')[1];
+    
+console.log(env)
+    if(env==="prod"){
+        var token = window.location.hash.split('&').filter(function(el) { if(el.match('id_token') !== null) return true; })[0].split('=')[1];
+    setCookie("id_token",token, 10)
+}
+else{
+    setCookie("id_token","dev-token")
+}
 
-setCookie("id_token",token, 10);
 
 </script>
 </html>
