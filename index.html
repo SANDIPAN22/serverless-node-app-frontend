@@ -10,8 +10,8 @@
 </head>
 <body>
     <h1>hi welcome to task manager. This is the home page which is publically available.</h1>
-    <a href="./task.html">GO TO THE CONSOLE</a>
-
+    
+    <button onclick="loginTransfer()">LOGIN HERE</button>
 
 
     <div class="footer">
@@ -20,6 +20,19 @@
       </div>
 
 </body>
+<script type="module">
+
+import {api_id, env} from "./config.js"
+function loginTransfer(){
+
+    if (env == "dev"){
+        window.location.replace("./success.html")
+    }
+    else{
+        window.location.replace("https://proj-alpha-user-auth.auth.us-east-1.amazoncognito.com/login?client_id=525f77r61i371bsuvhipsfds3v&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+profile&redirect_uri=https://d23i3p3jkzd48f.cloudfront.net/success.html")
+    }
+}
+</script>
 
 
 </html>
